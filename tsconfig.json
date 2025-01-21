@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Cible les modules modernes
+    "module": "ESNext", // Génère des modules ESM
+    "outDir": "./dist", // Dossier de sortie pour les fichiers compilés
+    "rootDir": "./src", // Répertoire des fichiers source
+    "strict": true, // Active le mode strict
+    "esModuleInterop": true, // Simplifie les importations CommonJS
+    "skipLibCheck": true, // Ignore les vérifications des types des bibliothèques
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*", "src/template/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

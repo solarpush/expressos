@@ -1,0 +1,38 @@
+{
+  "name": "expressos",
+  "version": "0.0.0",
+  "description": "Folder as code",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc && node src/copy-assets.js"
+  },
+  "bin": {
+    "expressos": "./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solarpush/expresso.git"
+  },
+  "keywords": [
+    "express",
+    "biche",
+    "typescript",
+    "hexa",
+    "documentation"
+  ],
+  "author": "Pierre Nicolas / Zoubaier Chraiet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/solarpush/expresso/issues"
+  },
+  "homepage": "https://github.com/solarpush/expresso#readme",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "inquirer": "^12.3.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
