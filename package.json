@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/solarpush/expresso.git"
+    "url": "git+https://github.com/solarpush/expressos.git"
   },
   "keywords": [
     "express",
@@ -24,9 +24,9 @@
   "author": "Pierre Nicolas / Zoubaier Chraiet",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/solarpush/expresso/issues"
+    "url": "https://github.com/solarpush/expressos/issues"
   },
-  "homepage": "https://github.com/solarpush/expresso#readme",
+  "homepage": "https://github.com/solarpush/expressos#readme",
   "dependencies": {
     "chalk": "^5.4.1",
     "commander": "^13.1.0",
