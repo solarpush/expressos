@@ -2,90 +2,156 @@
 
 import chalk from "chalk";
 import { Command } from "commander";
-import fs from "fs";
 import inquirer from "inquirer";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import ora from "ora";
+import { createProject } from "./generator.js";
+import { generateComponent } from "./generators.js";
+import { validateProjectName } from "./utils.js";
+
 const program = new Command();
-//@ts-check
-program
-  .name("expressos")
-  .description("CLI pour gérer vos projets Expresso")
-  .version("0.0.0");
+
+interface ProjectOptions {
+  name: string;
+  description?: string;
+  author?: string;
+  typescript: boolean;
+}
 
 program
-  .command("create case <domain> <caseName>")
-  .description("Créer un nouvel élément (ex: case, project, etc.)")
-  .action((type: string, domain: string, caseName: string) => {
-    if (type === "case") {
-      console.log('Création d’une nouvelle "case"... dans le domain ');
-      // Ajoute ici la logique pour créer une "case".
+  .name("expressos")
+  .description("Create Express services with clean architecture")
+  .version("1.1.0");
+
+program
+  .argument("[project-name]", "name of the project")
+  .option("-t, --typescript", "use TypeScript", true)
+  .action(async (projectName: string, options: any) => {
+    console.log(chalk.blue.bold("\n🚀 Welcome to ExpressOS!\n"));
+
+    let projectOptions: ProjectOptions;
+
+    if (projectName && !options.interactive) {
+      // Mode non-interactif avec les options par défaut
+      projectOptions = {
+        name: projectName,
+        typescript: options.typescript,
+      };
     } else {
-      console.log(`Type "${type}" non reconnu.`);
+      // Mode interactif
+      const answers = await inquirer.prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "What is your project name?",
+          default: projectName || "my-express-service",
+          validate: validateProjectName,
+        },
+        {
+          type: "input",
+          name: "description",
+          message: "Project description:",
+          default: "An Express service with clean architecture",
+        },
+        {
+          type: "input",
+          name: "author",
+          message: "Author name:",
+          default: "ExpressOS Team",
+        },
+        {
+          type: "confirm",
+          name: "typescript",
+          message: "Use TypeScript?",
+          default: true,
+        },
+      ]);
+
+      projectOptions = answers as ProjectOptions;
+    }
+
+    const spinner = ora("Creating project...").start();
+
+    try {
+      await createProject(projectOptions);
+      spinner.succeed(chalk.green("Project created successfully!"));
+
+      console.log(chalk.cyan("\n📝 Next steps:"));
+      console.log(chalk.white(`  cd ${projectOptions.name}`));
+      console.log(chalk.white("  npm install"));
+      console.log(chalk.white("  npm run dev"));
+
+      console.log(chalk.green("\n✨ Happy coding!\n"));
+    } catch (error) {
+      spinner.fail(chalk.red("Failed to create project"));
+      console.error(
+        chalk.red(error instanceof Error ? error.message : "Unknown error")
+      );
+      process.exit(1);
     }
   });
 
-// Sous-commande "start"
+// Commandes pour générer des composants
 program
-  .command("init")
-  .description("Démarrer le projet actuel")
-  .action(async () => {
-    const answers = await inquirer.prompt([
-      {
-        type: "input",
-        name: "projectName",
-        message: "Nom du projet :",
-        default: "expresso-app",
-      },
-    ]);
-
-    const projectName = answers.projectName;
-    main(projectName).catch((err) => console.error(err));
+  .command("usecase <domain> [action]")
+  .description("Generate a new use case with input/output validation")
+  .option("-p, --path <path>", "target path", "src/modules")
+  .action(async (domain: string, action: string | undefined, options: any) => {
+    try {
+      // Construire le nom basé sur les arguments fournis
+      const name = action ? `${domain} ${action}` : domain;
+      await generateComponent("usecase", name, options);
+    } catch (error) {
+      console.error(
+        chalk.red(error instanceof Error ? error.message : "Unknown error")
+      );
+      process.exit(1);
+    }
   });
 
 program
-  .command("help")
-  .description("Afficher l’aide pour toutes les commandes")
-  .action(() => {
-    console.log(`
-Commandes disponibles :
-  expressos init                 Initialiser un nouveau projet Expresso
-  expressos create case <domain> <caseName>  Créer une nouvelle "case"
-  expressos help                 Afficher cette aide
-    `);
+  .command("service <n>")
+  .description("Generate a new service with CRUD interface")
+  .action(async (name: string, options: any) => {
+    try {
+      await generateComponent("service", name, { path: "src/services" });
+    } catch (error) {
+      console.error(
+        chalk.red(error instanceof Error ? error.message : "Unknown error")
+      );
+      process.exit(1);
+    }
   });
 
-program.parse(process.argv);
+program
+  .command("middleware <n>")
+  .description("Generate a new Express middleware")
+  .action(async (name: string, options: any) => {
+    try {
+      await generateComponent("middleware", name, { path: "src/middlewares" });
+    } catch (error) {
+      console.error(
+        chalk.red(error instanceof Error ? error.message : "Unknown error")
+      );
+      process.exit(1);
+    }
+  });
 
-// Fonction principale
-async function main(projectName: string) {
-  const targetDir = path.join(process.cwd(), projectName);
+// Commande générique pour générer des modules
+program
+  .command("generate <type>")
+  .alias("g")
+  .description("Generate modules, controllers, or use cases")
+  .argument("<n>", "name of the component")
+  .option("-p, --path <path>", "target path", "src/modules")
+  .action(async (type: string, name: string, options: any) => {
+    try {
+      await generateComponent(type, name, options);
+    } catch (error) {
+      console.error(
+        chalk.red(error instanceof Error ? error.message : "Unknown error")
+      );
+      process.exit(1);
+    }
+  });
 
-  if (fs.existsSync(targetDir)) {
-    console.error("⚠️ Le répertoire existe déjà. Choisissez un autre nom.");
-    process.exit(1);
-  }
-
-  console.log(`Création du projet ${projectName}...`);
-  fs.mkdirSync(targetDir, { recursive: true });
-  const templateDir = path.join(__dirname, "template");
-  copyFolderSync(templateDir, targetDir);
-
-  console.log(chalk.green("✅ Projet créé avec succès!"));
-  console.log(chalk.blue(`📁 Allez dans le dossier : cd ${projectName}`));
-  console.log(chalk.yellow("🔧 Installez les dépendances : npm install"));
-  console.log(chalk.magenta("🚀 Lancez le projet : npm run dev"));
-}
-
-function copyFolderSync(src: string, dest: string) {
-  fs.mkdirSync(dest, { recursive: true });
-  for (const file of fs.readdirSync(src)) {
-    const srcFile = path.join(src, file);
-    const destFile = path.join(dest, file);
-    fs.statSync(srcFile).isDirectory()
-      ? copyFolderSync(srcFile, destFile)
-      : fs.copyFileSync(srcFile, destFile);
-  }
-}
+program.parse();

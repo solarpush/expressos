@@ -1,38 +1,44 @@
 {
   "name": "expressos",
-  "version": "0.0.0",
-  "description": "Folder as code",
+  "version": "1.1.0",
+  "description": "CLI tool to create Express services with clean architecture",
   "type": "module",
-  "main": "./dist/index.js",
-  "scripts": {
-    "build": "tsc && node src/copy-assets.js"
-  },
   "bin": {
     "expressos": "./dist/index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/solarpush/expressos.git"
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
+    "cli",
     "express",
-    "biche",
     "typescript",
-    "hexa",
-    "documentation"
+    "clean-architecture",
+    "services",
+    "api",
+    "generator"
   ],
-  "author": "Pierre Nicolas / Zoubaier Chraiet",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/solarpush/expressos/issues"
-  },
-  "homepage": "https://github.com/solarpush/expressos#readme",
+  "author": "ExpressOS Team",
+  "license": "MIT",
   "dependencies": {
-    "chalk": "^5.4.1",
-    "commander": "^13.1.0",
-    "inquirer": "^12.3.2"
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.12",
+    "ora": "^8.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
