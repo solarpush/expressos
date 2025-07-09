@@ -14,11 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verify branch is main
+      - name: Verify tag comes from main
         run: |
-          BRANCH=$(git rev-parse --abbrev-ref HEAD)
-          if [ "$BRANCH" != "main" ]; then
-            echo "Error: Publication is only allowed from main branch"
+          # Vérifier que le tag pointe vers un commit qui existe sur main
+          TAG_COMMIT=$(git rev-parse HEAD)
+          git fetch origin main
+          if ! git merge-base --is-ancestor $TAG_COMMIT origin/main; then
+            echo "Error: Tag must be created from main branch"
             exit 1
           fi
 
