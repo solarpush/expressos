@@ -8,13 +8,15 @@
 # Install globally
 npm install -g expressos
 
-# Create a new project
+# Create a new project (both commands work)
 expressos my-api
+# or use the short alias
+eos my-api
 
 # Generate components
 expressos usecase auth login
-expressos service email
-expressos middleware cors
+eos service email
+eos middleware cors
 ```
 
 ## Features
@@ -28,7 +30,7 @@ expressos middleware cors
 
 ## Documentation
 
-See [INTEGRATION.md](./INTEGRATION.md) for complete documentation and usage examples.
+See [INTEGRATION.md](https://github.com/solarpush/expressos.git/INTEGRATION.md) for complete documentation and usage examples.
 
 ## Generated Structure
 
