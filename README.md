@@ -25,7 +25,7 @@ eos middleware cors
 - ✅ **Zod validation** for inputs/outputs
 - ✅ **Hierarchical modules** (`auth/login`, `user/profile`)
 - ✅ **Automatic route loading**
-- ✅ **Firebase Functions ready** with `createApp()` function
+- ✅ **Cloud / Docker Functions ready** with `createApp()` function
 - ✅ **Service container** with dependency injection
 
 ## Documentation

@@ -1,6 +1,6 @@
 {
   "name": "expressos",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "CLI tool to create Express services with clean architecture",
   "type": "module",
   "homepage": "https://github.com/solarpush/expressos#readme",

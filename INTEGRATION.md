@@ -44,42 +44,12 @@ my-new-service/
 └── README.md
 ```
 
-### Intégration avec l'architecture existante
+**Ajouter des modules spécifiques** :
 
-Pour intégrer un service généré avec ExpressOS dans l'architecture TimeAZ :
-
-1. **Réutiliser le framework existant** :
-
-   ```bash
-   # Copier les fichiers framework existants
-   cp -r apps/api/functions/src/framework/* my-new-service/src/framework/
-   ```
-
-2. **Adapter les services** :
-
-   ```typescript
-   // my-new-service/src/services/services.ts
-   import { initializeApp } from "firebase-admin/app";
-   import { getFirestore } from "firebase-admin/firestore";
-
-   const app = initializeApp();
-   const db = getFirestore(app);
-
-   export const services = {
-     firestore: db,
-     logger: {
-       info: (message: string) => console.log(message),
-       error: (message: string) => console.error(message),
-     },
-   };
-   ```
-
-3. **Ajouter des modules spécifiques** :
-
-   ```bash
-   expressos generate module user
-   expressos generate module project
-   ```
+```bash
+expressos generate module user
+expressos generate module project
+```
 
 ### Avantages d'ExpressOS
 
